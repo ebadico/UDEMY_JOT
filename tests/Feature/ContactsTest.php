@@ -18,12 +18,7 @@ class ContactsTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $this->post('api/contacts', [
-            'name' => 'Test name',
-            'email' => 'email@example.com',
-            'birthday' => '05/14/1988',
-            'company' => 'ABC String',
-        ]);
+        $this->post('api/contacts', $this->data());
 
         $contact = Contact::first();
 
@@ -37,30 +32,25 @@ class ContactsTest extends TestCase
     /**
     * @test
     */
-    public function a_contact_requires_a_name()
+    public function fields_are_required()
     {
-        $response = $this->post('api/contacts', [
+        collect(['name', 'email', 'birthday', 'company'])
+            ->each(function ($field) {
+                $response = $this->post('api/contacts',
+                    array_merge($this->data(), [$field => ''])
+                );
+
+                $response->assertSessionHasErrors($field);
+                $this->assertCount(0, Contact::all());
+            });
+    }
+
+    private function data() {
+        return [
+            'name' => 'Test name',
             'email' => 'email@example.com',
             'birthday' => '05/14/1988',
             'company' => 'ABC String',
-        ]);
-
-        $response->assertSessionHasErrors('name');
-        $this->assertCount(0, Contact::all());
-    }
-
-    /**
-    * @test
-    */
-    public function a_contact_requires_an_email()
-    {
-        $response = $this->post('api/contacts', [
-            'name' => 'Test name',
-            'birthday' => '05/14/1988',
-            'company' => 'ABC String',
-        ]);
-
-        $response->assertSessionHasErrors('email');
-        $this->assertCount(0, Contact::all());
+        ];
     }
 }
