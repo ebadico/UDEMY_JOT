@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class ContactsController extends Controller
 {
+    public function show(Contact $contact)
+    {
+        return $contact;
+    }
+
     public function store()
     {
         $data = \request()->validate([

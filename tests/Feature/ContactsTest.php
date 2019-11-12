@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Contact;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Carbon;
 use Tests\TestCase;
 
@@ -13,8 +12,8 @@ class ContactsTest extends TestCase
     use RefreshDatabase;
 
     /**
-    * @test
-    */
+     * @test
+     */
     public function a_contact_can_be_added()
     {
         $this->withoutExceptionHandling();
@@ -31,8 +30,8 @@ class ContactsTest extends TestCase
     }
 
     /**
-    * @test
-    */
+     * @test
+     */
     public function fields_are_required()
     {
         collect(['name', 'email', 'birthday', 'company'])
@@ -47,8 +46,8 @@ class ContactsTest extends TestCase
     }
 
     /**
-    * @test
-    */
+     * @test
+     */
     public function email_must_be_a_valid_email()
     {
         $response = $this->post('api/contacts',
@@ -60,8 +59,8 @@ class ContactsTest extends TestCase
     }
 
     /**
-    * @test
-    */
+     * @test
+     */
     public function birthdays_are_properly_stored()
     {
         $this->withoutExceptionHandling();
@@ -74,7 +73,30 @@ class ContactsTest extends TestCase
         $this->assertEquals('05-14-1988', Contact::first()->birthday->format('m-d-Y'));
     }
 
-    private function data() {
+    /**
+     * @test
+     */
+    public function a_contact_can_be_retrieved()
+    {
+        $this->withoutExceptionHandling();
+
+        /**
+        * @var Contact $contact
+        */
+        $contact = factory(Contact::class)->create();
+
+        $response = $this->get('/api/contacts/' . $contact->id);
+
+        $response->assertJson([
+            'name' => $contact->name,
+            'email' => $contact->email,
+            'birthday' => $contact->birthday,
+            'company' => $contact->company,
+        ]);
+    }
+
+    private function data()
+    {
         return [
             'name' => 'Test name',
             'email' => 'email@example.com',

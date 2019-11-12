@@ -20,6 +20,12 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Contact whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Contact whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string $email
+ * @property \Illuminate\Support\Carbon $birthday
+ * @property string $company
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Contact whereBirthday($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Contact whereCompany($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Contact whereEmail($value)
  */
 class Contact extends Model
 {
