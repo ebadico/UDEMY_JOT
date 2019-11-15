@@ -26,6 +26,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Contact whereBirthday($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Contact whereCompany($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Contact whereEmail($value)
+ * @property int $user_id
+ * @property-read \App\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Contact whereUserId($value)
  */
 class Contact extends Model
 {
