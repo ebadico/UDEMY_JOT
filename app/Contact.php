@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Contact
+ * App\ContactResource
  *
  * @property int $id
  * @property string $name
