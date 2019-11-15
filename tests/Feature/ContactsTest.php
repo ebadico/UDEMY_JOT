@@ -6,6 +6,7 @@ use App\Contact;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class ContactsTest extends TestCase
@@ -29,7 +30,6 @@ class ContactsTest extends TestCase
     */
     public function a_list_of_contacts_can_be_fetched_for_the_authenticated_user()
     {
-        $this->withoutExceptionHandling();
         /**
         * @var User $user
         */
@@ -43,13 +43,16 @@ class ContactsTest extends TestCase
         $anotherContact = factory(Contact::class)->create(['user_id' => $anotherUser->id]);
 
         $response = $this->get('/api/contacts?api_token=' . $user->api_token);
-
-        $response->assertJsonCount(1)
-            ->assertJson([
-                'data' => [
-                    ['contact_id' => $contact->id],
+        $response->assertJsonCount(1);
+        $response->assertJson([
+            'data' => [
+                [
+                    'data' => [
+                        'contact_id' => $contact->id,
+                    ]
                 ]
-            ]);
+            ]
+        ]);
     }
 
     /**
@@ -69,7 +72,7 @@ class ContactsTest extends TestCase
      */
     public function an_authenticated_user_can_add_contact()
     {
-        $this->post('api/contacts', $this->data());
+        $response = $this->post('api/contacts', $this->data());
 
         $contact = Contact::first();
 
@@ -78,6 +81,15 @@ class ContactsTest extends TestCase
         $this->assertEquals('05/14/1988', $contact->birthday->format('m/d/Y'));
         $this->assertEquals('ABC String', $contact->company);
 
+        $response->assertStatus(Response::HTTP_CREATED);
+        $response->assertJson([
+            'data' => [
+                'contact_id' => $contact->id,
+            ],
+            'links' => [
+                'self' => url($contact->path())
+            ]
+        ]);
     }
 
     /**
@@ -114,8 +126,6 @@ class ContactsTest extends TestCase
      */
     public function birthdays_are_properly_stored()
     {
-        $this->withoutExceptionHandling();
-
         $this->post('api/contacts', $this->data());
 
         $this->assertCount(1, Contact::all());
@@ -170,6 +180,8 @@ class ContactsTest extends TestCase
     */
     public function a_contact_can_be_patched()
     {
+        $this->withoutExceptionHandling();
+
         $contact = factory(Contact::class)->create(['user_id' => $this->user->id]);
 
         $response = $this->patch('/api/contacts/' . $contact->id, $this->data());
@@ -180,6 +192,15 @@ class ContactsTest extends TestCase
         $this->assertEquals('email@example.com', $contact->email);
         $this->assertEquals('05/14/1988', $contact->birthday->format('m/d/Y'));
         $this->assertEquals('ABC String', $contact->company);
+        $response->assertStatus(Response::HTTP_OK);
+        $response->assertJson([
+            'data' => [
+                'contact_id' => $contact->id,
+            ],
+            'links' => [
+                'self' => $contact->path(),
+            ]
+        ]);
     }
 
     /**
@@ -208,6 +229,8 @@ class ContactsTest extends TestCase
             ['api_token' => $this->user->api_token]);
 
         $this->assertCount(0, Contact::all());
+
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
     /**

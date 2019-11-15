@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\Resources\ContactResource;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
