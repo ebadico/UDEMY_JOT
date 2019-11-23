@@ -17,6 +17,12 @@
 			'name', 'label', 'placeholder', 'errors'
 		],
 
+		computed: {
+			hasError() {
+				return this.errors && this.errors[this.name] && this.errors[this.name].length > 0;
+			}
+		},
+
 		data: () => {
 			return {
 				value: '',
@@ -29,18 +35,18 @@
 				this.$emit('update:field', this.value)
 			},
 			errorMessage() {
-				if( this.errors && this.errors[this.name] && this.errors[this.name].length > 0) {
+				if( this.hasError) {
 					return this.errors[this.name][0];
 				}
 			},
 			clearErrors() {
-				if( this.errors && this.errors[this.name] && this.errors[this.name].length > 0) {
+				if( this.hasError) {
 					this.errors[this.name] = null;
 				}
 			},
 			errorClassObject() {
 				return {
-					'error-field': this.errors && this.errors[this.name] && this.errors[this.name].length > 0
+					'error-field': this.hasError
 				}
 			}
 
