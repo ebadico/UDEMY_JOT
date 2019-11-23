@@ -1,10 +1,10 @@
 <template>
 	<div>
 		<form @submit.prevent="submitForm">
-			<InputField name="name" label="Contact Name" placeholder="Contact Name" @update:field="form.name = $event"></InputField>
-			<InputField name="email" label="Contact Email" placeholder="Contact Email" @update:field="form.email = $event"></InputField>
-			<InputField name="company" label="Company" placeholder="Company" @update:field="form.company = $event"></InputField>
-			<InputField name="birthday" label="Birthday" placeholder="MM/DD/YYYY" @update:field="form.birthday = $event"></InputField>
+			<InputField name="name" label="Contact Name" placeholder="Contact Name" @update:field="form.name = $event" :errors="errors"></InputField>
+			<InputField name="email" label="Contact Email" placeholder="Contact Email" @update:field="form.email = $event" :errors="errors"></InputField>
+			<InputField name="company" label="Company" placeholder="Company" @update:field="form.company = $event" :errors="errors"></InputField>
+			<InputField name="birthday" label="Birthday" placeholder="MM/DD/YYYY" @update:field="form.birthday = $event" :errors="errors"></InputField>
 
 			<div class="flex justify-end">
 				<button class="py-2 px-4 rounded text-red-700 border mr-5 hover:border-red-700">Cancel</button>
@@ -29,7 +29,9 @@
 					'email': '',
 					'company': '',
 					'birthday': '',
-				}
+				},
+
+				errors: null,
 			}
 		},
 
@@ -40,7 +42,7 @@
 
 					})
 					.catch(errors => {
-
+						this.errors = errors.response.data.errors;
 					});
 			}
 		}
