@@ -43,9 +43,7 @@
                         Contacts
                     </div>
 
-                    <div class="border border-gray-400 rounded-full text-white bg-blue-400 w-10 h-10 flex justify-center items-center">
-                        VG
-                    </div>
+                    <UserCircle :name="user.name"></UserCircle>
                 </div>
 
                 <div class="flex flex-col overflow-y-hidden flex-1">
@@ -58,9 +56,11 @@
 </template>
 
 <script>
+    import UserCircle from "./UserCircle";
+
     export default {
         name: "App",
-
+        components: {UserCircle},
         props: [
             'user'
         ],
