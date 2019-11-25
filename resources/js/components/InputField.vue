@@ -14,7 +14,7 @@
 		name: "InputField",
 
 		props: [
-			'name', 'label', 'placeholder', 'errors'
+			'name', 'label', 'placeholder', 'errors', 'data'
 		],
 
 		computed: {
@@ -50,7 +50,12 @@
 				}
 			}
 
-		}
+		},
+        watch: {
+		    data: function(val) {
+                this.value = val;
+            }
+        }
 	}
 </script>
 
