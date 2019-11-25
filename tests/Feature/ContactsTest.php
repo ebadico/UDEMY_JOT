@@ -87,7 +87,7 @@ class ContactsTest extends TestCase
                 'contact_id' => $contact->id,
             ],
             'links' => [
-                'self' => url($contact->path())
+                'self' => $contact->path()
             ]
         ]);
     }

@@ -2228,7 +2228,9 @@ __webpack_require__.r(__webpack_exports__);
     submitForm: function submitForm() {
       var _this = this;
 
-      axios.post('/api/contacts', this.form).then(function (response) {})["catch"](function (errors) {
+      axios.post('/api/contacts', this.form).then(function (response) {
+        _this.$router.push(response.data.links.self);
+      })["catch"](function (errors) {
         _this.errors = errors.response.data.errors;
       });
     }

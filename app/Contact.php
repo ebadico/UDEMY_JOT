@@ -41,7 +41,7 @@ class Contact extends Model
 
     public function path()
     {
-        return url('/contacts/' . $this->id);
+        return '/contacts/' . $this->id;
     }
 
     public function setBirthdayAttribute($birthday)
