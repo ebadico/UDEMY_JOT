@@ -4,7 +4,7 @@
             <p>No contacts yet... <rounter-link to="/contacts/create">Get started ></rounter-link></p>
         </div>
         <div v-for="contact in contacts">
-            <router-link :to="'/contacts/' + contact.data.contact_id" class="flex items-center border-b border-gray-400 p-4 hover:bg-gray-100">
+            <router-link :to="contact.links.self" class="flex items-center border-b border-gray-400 p-4 hover:bg-gray-100">
                 <UserCircle :name="contact.data.name"></UserCircle>
 
                 <div class="p-4">

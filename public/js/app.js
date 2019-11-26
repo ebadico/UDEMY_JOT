@@ -21629,7 +21629,7 @@ var render = function() {
                   {
                     staticClass:
                       "flex items-center border-b border-gray-400 p-4 hover:bg-gray-100",
-                    attrs: { to: "/contacts/" + contact.data.contact_id }
+                    attrs: { to: contact.links.self }
                   },
                   [
                     _c("UserCircle", { attrs: { name: contact.data.name } }),
