@@ -43,7 +43,7 @@
                         Contacts
                     </div>
                     <div class="flex items-center">
-                        <SearchBar class="relative"></SearchBar>
+                        <SearchBar></SearchBar>
                         <UserCircle :name="user.name"></UserCircle>
                     </div>
                 </div>

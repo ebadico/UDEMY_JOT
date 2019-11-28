@@ -2230,6 +2230,26 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _UserCircle__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./UserCircle */ "./resources/js/components/UserCircle.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2245,25 +2265,45 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "SearchBar",
+  components: {
+    UserCircle: _UserCircle__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
   data: function data() {
     return {
-      searchTerm: ''
+      searchTerm: '',
+      focus: false,
+      results: []
     };
+  },
+  computed: {
+    searchTermMinLength: function searchTermMinLength() {
+      return this.searchTerm.length < 3;
+    }
   },
   methods: {
     search: lodash__WEBPACK_IMPORTED_MODULE_0___default.a.debounce(function (e) {
-      if (this.searchTerm.length < 3) {
+      var _this = this;
+
+      if (this.searchTermMinLength) {
         return;
       }
 
       axios.post('api/search', {
         searchTerm: this.searchTerm
       }).then(function (response) {
-        console.log(response.data);
-      })["catch"](function (errors) {});
-    }, 300)
+        _this.results = response.data.data;
+      })["catch"](function (errors) {
+        console.log(errors.response);
+      });
+    }, 300),
+    clear: function clear() {
+      this.searchTerm = '';
+      this.focus = false;
+      this.results = [];
+    }
   }
 });
 
@@ -21050,7 +21090,7 @@ var render = function() {
               "div",
               { staticClass: "flex items-center" },
               [
-                _c("SearchBar", { staticClass: "relative" }),
+                _c("SearchBar"),
                 _vm._v(" "),
                 _c("UserCircle", { attrs: { name: _vm.user.name } })
               ],
@@ -21500,48 +21540,113 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("div", { staticClass: "absolute left-0" }, [
-      _c(
-        "svg",
-        { staticClass: "w-5 h-5 mt-2 ml-2", attrs: { viewBox: "0 0 24 24" } },
-        [
-          _c("path", {
-            attrs: {
-              "fill-rule": "evenodd",
-              d:
-                "M20.2 18.1l-1.4 1.3-5.5-5.2 1.4-1.3 5.5 5.2zM7.5 12c-2.7 0-4.9-2.1-4.9-4.6s2.2-4.6 4.9-4.6 4.9 2.1 4.9 4.6S10.2 12 7.5 12zM7.5.8C3.7.8.7 3.7.7 7.3s3.1 6.5 6.8 6.5c3.8 0 6.8-2.9 6.8-6.5S11.3.8 7.5.8z",
-              "clip-rule": "evenodd"
+    _vm.focus
+      ? _c("div", {
+          staticClass:
+            "bg-black opacity-0 absolute right-0 left-0 top-0 bottom-0 z-10",
+          on: {
+            click: function($event) {
+              _vm.focus = false
             }
-          })
-        ]
-      )
-    ]),
+          }
+        })
+      : _vm._e(),
     _vm._v(" "),
-    _c("input", {
-      directives: [
-        {
-          name: "model",
-          rawName: "v-model",
-          value: _vm.searchTerm,
-          expression: "searchTerm"
+    _c("div", { staticClass: "relative z-10" }, [
+      _c("div", { staticClass: "absolute" }, [
+        _c(
+          "svg",
+          { staticClass: "w-5 h-5 mt-2 ml-2", attrs: { viewBox: "0 0 24 24" } },
+          [
+            _c("path", {
+              attrs: {
+                "fill-rule": "evenodd",
+                d:
+                  "M20.2 18.1l-1.4 1.3-5.5-5.2 1.4-1.3 5.5 5.2zM7.5 12c-2.7 0-4.9-2.1-4.9-4.6s2.2-4.6 4.9-4.6 4.9 2.1 4.9 4.6S10.2 12 7.5 12zM7.5.8C3.7.8.7 3.7.7 7.3s3.1 6.5 6.8 6.5c3.8 0 6.8-2.9 6.8-6.5S11.3.8 7.5.8z",
+                "clip-rule": "evenodd"
+              }
+            })
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.searchTerm,
+            expression: "searchTerm"
+          }
+        ],
+        staticClass:
+          "w-64 mr-6 bg-gray-200 border border-gray-400 pl-8 pr-3 py-1 rounded-full text-sm\n               focus:outline-none focus:border-blue-500 focus:shadow focus:bg-gray-100",
+        attrs: { type: "text", id: "searchTerm", placeholder: "Search..." },
+        domProps: { value: _vm.searchTerm },
+        on: {
+          input: [
+            function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.searchTerm = $event.target.value
+            },
+            _vm.search
+          ],
+          focus: function($event) {
+            _vm.focus = true
+          }
         }
-      ],
-      staticClass:
-        "w-64 mr-6 bg-gray-200 border border-gray-400 pl-8 pr-3 py-1 rounded-full text-sm\n           focus:outline-none focus:border-blue-500 focus:shadow focus:bg-gray-100",
-      attrs: { type: "text", id: "searchTerm", placeholder: "Search..." },
-      domProps: { value: _vm.searchTerm },
-      on: {
-        input: [
-          function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.searchTerm = $event.target.value
-          },
-          _vm.search
-        ]
-      }
-    })
+      }),
+      _vm._v(" "),
+      _vm.focus && !_vm.searchTermMinLength
+        ? _c(
+            "div",
+            {
+              staticClass:
+                "absolute bg-blue-900 text-white rounder-lg p-4 w-96 right-0 mr-6 mt-2 shadow z-20"
+            },
+            [
+              _vm.results == 0
+                ? _c("div", [
+                    _vm._v(
+                      "No results found for '" + _vm._s(_vm.searchTerm) + "'"
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm._l(_vm.results, function(result) {
+                return _c(
+                  "div",
+                  { staticClass: "py-3", on: { click: _vm.clear } },
+                  [
+                    _c("router-link", { attrs: { to: result.links.self } }, [
+                      _c(
+                        "div",
+                        { staticClass: "flex items-center" },
+                        [
+                          _c("UserCircle", {
+                            attrs: { name: result.data.name }
+                          }),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "text-white pl-5" }, [
+                            _c("p", [_vm._v(_vm._s(result.data.name))]),
+                            _vm._v(" "),
+                            _c("p", [_vm._v(_vm._s(result.data.company))])
+                          ])
+                        ],
+                        1
+                      )
+                    ])
+                  ],
+                  1
+                )
+              })
+            ],
+            2
+          )
+        : _vm._e()
+    ])
   ])
 }
 var staticRenderFns = []
